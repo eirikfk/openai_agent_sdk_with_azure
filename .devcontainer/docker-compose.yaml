@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  openai_agent:
+    user: vscode
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VARIANT: 3.12-bullseye
+    volumes:
+      - ..:/workspace:cached # Shared workspace between host and devcontainer
+      - openai_agent_extensions:/home/vscode/.vscode-server/extensions # Storing extensions
+      - openai_agent_commandhistory:/home/vscode/commandhistory # Persistant command line history
+      - openai_agent_cache:/home/vscode/.cache # Caching poetry/pip wheels
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+# Volumes that are not shared between Host and Devcontainer must be listed here.
+volumes:
+  openai_agent_extensions:
+  openai_agent_commandhistory:
+  openai_agent_cache:
